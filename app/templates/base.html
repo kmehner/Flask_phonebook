@@ -12,15 +12,14 @@
     </head>
 <body>
 
-    <div class="row bg-dark">
-        <h1 class="text-center text-white">Kate's phonebook</h1>
+    <div class="row bg-dark p-3">
+        <h1 class="text-center text-white">Kate's Phonebook</h1>
     </div>
 
     <nav class="nav bg-dark d-flex justify-content-around">
         <a href="{{ url_for('index') }}" class="link-light">Home</a>
-        <a href="" class="link-light">Search Name</a>
-        <a href="#" class="link-light">Sign Up</a>
-        <a href="#" class="link-light">Log In</a>
+        <a href=" {{ url_for('register_phone_number')}} " class="link-light">Register Phone Number</a>
+
     </nav>
 
     <div class="container">
