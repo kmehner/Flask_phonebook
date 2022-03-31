@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
 
-    <h1> {{ title }} </h1>
+    <h1 class="text-center pt-3"> {{ title }} </h1>
     
     {% for a in addresses %}
     <div class="card">
         <div class="card-body">
-            {{ a }}
+        <p>
+        <strong>Name: </strong>  {{ a.first_name }} {{ a.last_name }}  <br>
+        <strong>Phone Number: </strong> {{ a.phone_number }}<br>
+        <strong>Address: </strong> {{ a.address }}
+        </p>
         </div>
     </div>
     {% endfor %}
 
 {% endblock content %}
+

@@ -19,7 +19,7 @@
     <nav class="nav bg-dark d-flex justify-content-around p-3">
         <a href="{{ url_for('index') }}" class="link-light">Home</a>
         {% if current_user.is_authenticated %}
-            <a href=" {{ url_for('register_address')}} " class="link-light">Register Phone Number</a>
+            <a href=" {{ url_for('register_address')}} " class="link-light">Register Address</a>
             <a href="{{ url_for('view_addresses') }}" class="link-light">View Addresses</a>
             <a href="{{ url_for('create_post') }}" class="link-light">Create A Post</a>
             <a href="{{ url_for('my_posts') }}" class="link-light">My Posts</a>

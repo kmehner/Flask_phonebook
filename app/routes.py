@@ -89,24 +89,22 @@ def my_posts():
 
 @app.route('/register_address', methods=['GET', 'POST'])
 def register_address():
-   title = "Register Phone Number"
+   title = "Register Address"
    form = AddressForm()
    addresses = Address.query.all()
    if form.validate_on_submit():
-      first_name = form.first_name.data
-      last_name = form.last_name.data
-      phone = form.phone_number.data
-      address = form.address.data
-      Address(first_name=first_name, last_name=last_name, address=address, phone_number=phone)
-      return redirect(url_for('index'))
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        phone = form.phone_number.data
+        address = form.address.data
+        address = Address(first_name=first_name, last_name=last_name, address=address, phone_number=phone)
+        return redirect(url_for('view_addresses'))
 
-
-   return render_template('register_address.html', title=title, form=form)
+   return render_template('register_address.html', title=title, form=form, addresses=addresses)
 
 
 @app.route('/view_addresses', methods=['GET', 'POST'])
 def view_addresses():
     title = "View Addresses"
-    form = AddressForm()
     addresses = Address.query.all()
-    return render_template('view_addresses.html', title=title, form=form)
+    return render_template('view_addresses.html', title=title, addresses=addresses)
