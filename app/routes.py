@@ -31,6 +31,7 @@ def signup():
         new_user = User(email=email, username=username, password=password)
         # flash message saying new user has been created
         flash(f"{new_user.username} has succesfully signed up.", "success")
+        login_user(new_user)
         return redirect(url_for('index'))
 
     return render_template('signup.html', title=title, form=form)
@@ -87,7 +88,13 @@ def my_posts():
     posts = current_user.posts.all()
     return render_template('my_posts.html', title=title, posts=posts)
 
-@app.route('/register_address', methods=['GET', 'POST'])
+@app.route('/view-addresses', methods=['GET', 'POST'])
+def view_addresses():
+    title = "All Addresses"
+    addresses = Address.query.all()
+    return render_template('view_addresses.html', title=title, addresses=addresses)
+
+@app.route('/register-address', methods=['GET', 'POST'])
 def register_address():
    title = "Register Address"
    form = AddressForm()
@@ -95,16 +102,23 @@ def register_address():
    if form.validate_on_submit():
         first_name = form.first_name.data
         last_name = form.last_name.data
+        name = first_name + last_name
         phone = form.phone_number.data
         address = form.address.data
-        address = Address(first_name=first_name, last_name=last_name, address=address, phone_number=phone)
-        return redirect(url_for('view_addresses'))
+        users_with_that_info = Address.query.filter(Address.phone_number==phone).all() 
+        if users_with_that_info:
+            flash(f"There is already a user with that phone-number. Please try again", "danger")
+            return render_template('register_address.html', title=title, form=form)
+        else:
+            Address(first_name=first_name, last_name=last_name, address=address, phone_number=phone, user_id=current_user.id)
+            return redirect(url_for('view_addresses'))
 
    return render_template('register_address.html', title=title, form=form, addresses=addresses)
 
 
-@app.route('/view_addresses', methods=['GET', 'POST'])
-def view_addresses():
-    title = "View Addresses"
-    addresses = Address.query.all()
-    return render_template('view_addresses.html', title=title, addresses=addresses)
+@app.route('/my-addresses')
+@login_required
+def my_addresses():
+   title = "My Addresses"
+   addresses = current_user.addresses.all()
+   return render_template('my_addresses.html', title=title, addresses=addresses)
