@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<h1 class="text-center">Edit {{ address.first_name }}</h1>
+
+<form action="" method="post">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.first_name.label }}
+        {{ form.first_name(class='form-control', value=address.first_name) }}
+        
+        {{ form.last_name.label }}
+        {{ form.last_name(class='form-control', value=address.last_name) }}
+
+        {{ form.phone_number.label }}
+        {{ form.phone_number(class='form-control', value=address.phone_number) }}
+
+        {{ form.address.label }}
+        {{ form.address(class='form-control', value=address.address) }}
+        
+        {{ form.submit(class='btn btn-outline-primary w-100', value='Edit') }}
+    </div>
+</form>
+
+{% endblock content %}

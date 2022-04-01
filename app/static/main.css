@@ -1,0 +1,16 @@
+nav li {
+    display:flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+nav.nav-item {
+    text-decoration: none;
+}
+
+.dropdown-divider{
+    color: black;
+}
+ body {
+     background-color: rgb(244, 252, 255);
+ }

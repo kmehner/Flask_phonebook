@@ -101,8 +101,8 @@ def register_address():
             return render_template('register_address.html', title=title, form=form)
         else:
             new_address = Address(first_name=first_name, last_name=last_name, address=address, phone_number=phone, user_id=current_user.id)
-            flash(f"{new_address} has been created", "secondary")
-            return redirect(url_for('blog.view_addresses'))
+            flash(f"Address for {new_address.first_name} {new_address.last_name} has been created", "secondary")
+            return redirect(url_for('blog.my_addresses'))
 
    return render_template('register_address.html', title=title, form=form, addresses=addresses)
 
@@ -119,4 +119,33 @@ def my_addresses():
 def view_addresses():
     title = "All Addresses"
     addresses = Address.query.all()
-    return render_template('view_addresses.html', title=title, addresses=addresses)
+    return render_template('address_detail.html', title=title, addresses=addresses)
+
+# Edit a Single Route by ID
+@blog.route('/edit-addresses/<address_id>', methods=["GET", "POST"])
+@login_required
+def edit_address(address_id):
+    address = Address.query.get_or_404(address_id)
+    if address.name != current_user:
+        flash('You do not have edit access to this address.', 'danger')
+        return redirect(url_for('blog.my_addresses'))
+    title = f"Edit {address.first_name}"
+    form = AddressForm()
+    if form.validate_on_submit():
+        address.update(**form.data)
+        flash(f'Address for {address.first_name} {address.last_name} has been updated', 'warning')
+        return redirect(url_for('blog.my_addresses'))
+
+    return render_template('address_edit.html', title=title, address=address, form=form)
+
+
+@blog.route('/delete-addresses/<address_id>')
+@login_required
+def delete_address(address_id):
+    address = Address.query.get_or_404(address_id)
+    if address.name != current_user:
+        flash('You do not have delete access to this addreess', 'danger')
+    else:
+        flash(f'Address for {address.first_name} {address.last_name} has been deleted!')
+        address.delete()
+    return redirect(url_for('blog.my_addresses'))
