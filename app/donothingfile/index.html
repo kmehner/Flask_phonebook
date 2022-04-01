@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+    {% if current_user.is_authenticated %}
+    <h1 class="text-center m-3">Hello {{ current_user.username }}!</h1>
+    {% else %}
+    <h1 class="m-3">Hello! <br> Please Sign In/Sign Up </h1>
+    {% endif %}
+
+    {% for p in posts %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ p.title }}</h5>
+            <p class="card-text">{{ p.body }}</p>
+            <div>
+                <cite>&mdash; {{ p.author }}</cite>
+            </div>
+            <a href="{{ url_for('single_post', post_id=p.id) }}" class="btn btn-primary">More Info</a>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock content %}

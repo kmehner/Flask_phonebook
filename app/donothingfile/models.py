@@ -46,6 +46,16 @@ class Post(db.Model):
     def __repr__(self):
         return f"<Post|{self.title}>"
 
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            if key in {'title', 'body'}:
+                setattr(self, key, value)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
 class Address(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     first_name = db.Column(db.String(100), nullable=False)
