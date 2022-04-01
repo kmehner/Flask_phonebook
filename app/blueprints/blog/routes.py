@@ -1,8 +1,8 @@
 from . import blog
 from flask import redirect, render_template, url_for, flash
 from flask_login import login_required, current_user
-from .forms import PostForm, SearchForm
-from .models import Post
+from .forms import PostForm, SearchForm, AddressForm
+from .models import Post, Address
 
 @blog.route('/')
 def index():
@@ -82,3 +82,41 @@ def delete_post(post_id):
         post.delete()
         flash(f'{post.title} has been deleted.', 'secondary')
     return redirect(url_for('blog.my_posts'))
+
+
+@blog.route('/register-address', methods=['GET', 'POST'])
+def register_address():
+   title = "Register Address"
+   form = AddressForm()
+   addresses = Address.query.all()
+   if form.validate_on_submit():
+        first_name = form.first_name.data
+        last_name = form.last_name.data
+        name = first_name + last_name
+        phone = form.phone_number.data
+        address = form.address.data
+        users_with_that_info = Address.query.filter(Address.phone_number==phone).all() 
+        if users_with_that_info:
+            flash(f"There is already a user with that phone-number. Please try again", "danger")
+            return render_template('register_address.html', title=title, form=form)
+        else:
+            new_address = Address(first_name=first_name, last_name=last_name, address=address, phone_number=phone, user_id=current_user.id)
+            flash(f"{new_address} has been created", "secondary")
+            return redirect(url_for('blog.view_addresses'))
+
+   return render_template('register_address.html', title=title, form=form, addresses=addresses)
+
+
+@blog.route('/my-addresses')
+@login_required
+def my_addresses():
+   title = "My Addresses"
+   addresses = current_user.addresses.all()
+   return render_template('my_addresses.html', title=title, addresses=addresses)
+   
+
+@blog.route('/view-addresses', methods=['GET', 'POST'])
+def view_addresses():
+    title = "All Addresses"
+    addresses = Address.query.all()
+    return render_template('view_addresses.html', title=title, addresses=addresses)

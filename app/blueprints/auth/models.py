@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    addresses = db.relationship('Address', backref='name', lazy='dynamic')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
